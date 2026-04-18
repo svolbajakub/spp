@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sociální první pomoc - ZZS ÚK</title>
+    <style>
+        :root {
+            --zzs-blue: #005eb8;
+            --zzs-red: #e4002b;
+            --light-bg: #f8f9fa;
+            --border: #dee2e6;
+            --text: #333;
+        }
+
+        body {
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--light-bg);
+            margin: 0; padding: 0; color: var(--text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            background-color: white; padding: 10px 15px;
+            border-bottom: 2px solid var(--zzs-blue); position: sticky; top: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 50px;
+        }
+
+        .header-logo {
+            position: absolute; left: 15px; height: 35px; width: auto;
+        }
+
+        header h1 { margin: 0; font-size: 1rem; color: var(--zzs-blue); text-transform: uppercase; font-weight: 800; text-align: center; padding: 0 45px; }
+
+        .search-area { background: white; padding: 12px; border-bottom: 1px solid var(--border); }
+
+        #searchInput {
+            width: 100%; padding: 12px 15px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: #f1f3f5;
+        }
+
+        .container { padding: 10px; max-width: 800px; margin: auto; padding-bottom: 80px; }
+
+        .category-item { background: white; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+
+        .category-header { padding: 15px; display: flex; align-items: center; cursor: pointer; user-select: none; }
+
+        .category-icon { font-size: 1.4rem; margin-right: 15px; min-width: 30px; text-align: center; }
+
+        .category-title { flex-grow: 1; font-weight: 600; font-size: 1rem; }
+
+        .chevron {
+            border: solid #adb5bd; border-width: 0 2px 2px 0; display: inline-block;
+            padding: 3px; transform: rotate(45deg); transition: transform 0.3s;
+        }
+
+        .active .chevron { transform: rotate(-135deg); }
+        .active .category-header { background-color: #f1f8ff; }
+
+        .category-content { display: none; border-top: 1px solid var(--border); padding: 5px 15px; background-color: #fff; }
+
+        .contact-entry { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .contact-entry:last-child { border-bottom: none; }
+
+        .org-name { font-weight: 800; color: var(--zzs-blue); margin-bottom: 6px; display: block; font-size: 1.1rem; }
+        
+        .org-detail { font-size: 0.9rem; margin-bottom: 10px; line-height: 1.4; }
+        .detail-row { display: flex; margin-bottom: 4px; border-bottom: 1px solid #f9f9f9; padding-bottom: 2px; }
+        .detail-label { font-weight: bold; min-width: 95px; color: #666; font-size: 0.85rem; }
+        .detail-value { color: #333; }
+
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+
+        .btn {
+            display: flex; align-items: center; justify-content: center; padding: 10px;
+            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem;
+            text-align: center; border: 1px solid transparent; transition: background 0.2s;
+        }
+
+        .btn-call { border-color: var(--zzs-red); color: var(--zzs-red); grid-column: span 2; font-size: 1.1rem; }
+        .btn-call:active { background: var(--zzs-red); color: white; }
+
+        .btn-web { border-color: var(--zzs-blue); color: var(--zzs-blue); }
+        .btn-mail { border-color: #6c757d; color: #6c757d; }
+
+        .no-results { text-align: center; padding: 40px; color: #999; display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="icon.png" alt="" class="header-logo" onerror="this.style.display='none'">
+    <h1>Sociální první pomoc ZZS ÚK</h1>
+</header>
+
+<div class="search-area">
+    <input type="text" id="searchInput" placeholder="Hledat službu, město, situaci..." onkeyup="filterApp()">
+</div>
+
+<div class="container" id="mainContent">
+
+    <div class="category-item" data-search="deti linka bezpeci krizove centrum spirala">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🧸</div>
+            <div class="category-title">Děti 0 - 15 let</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Linka bezpečí</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Krizová pomoc pro děti a studenty.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (24/7)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:116111" class="btn btn-call">📞 Volat 116 111</a>
+                    <a href="https://www.linkabezpeci.cz" class="btn btn-web" target="_blank">Web</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Krizové centrum Spirála</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Sociální péče 3316/12A, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Pomoc dětem v akutní tísni.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá 8:00–16:00 (Tel. nonstop)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475601174" class="btn btn-call">📞 Volat 475 601 174</a>
+                    <a href="http://www.spirala-ul.cz" class="btn btn-web" target="_blank">Web</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Rodičovská linka</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Krizová pomoc rodičům ohledně dětí (útěky, výchova).</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Čt 9-21, Pá 9-17</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420840200000" class="btn btn-call">📞 Volat 840 200 000</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="mladez dospivajici skola problemy vztahy">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🎓</div>
+            <div class="category-title">Mladiství 15 - 24 let</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Linka důvěry pro mládež (Fokus)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Anonymní pomoc pro mladé v krizi (kraj).</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (24/7)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475603390" class="btn btn-call">📞 Volat 475 603 390</a>
+                    <a href="https://www.fokuslabe.cz" class="btn btn-web" target="_blank">Web</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="dospeli krize mnul socialni pece">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">👤</div>
+            <div class="category-title">Dospělí</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Centrum krizové péče MNÚL</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Sociální péče 3316/12A, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Psychosociální pomoc a krizová lůžka.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (24/7)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420705588381" class="btn btn-call">📞 Volat 705 588 381</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Linka první psychické pomoci</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Anonymní bezplatná krizová linka pro dospělé.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (24/7)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:116123" class="btn btn-call">📞 Volat 116 123</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="seniori elpida duchodci osamelost pece">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">👵</div>
+            <div class="category-title">Senioři</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Linka seniorů Elpida</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Anonymní pomoc seniorům a pečujícím.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Denně 8:00–20:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:800200007" class="btn btn-call">📞 Volat 800 200 007</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Senior telefon (ŽIVOT 90)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Krizová linka pro seniory, riziko suicidia.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (24/7)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:800120080" class="btn btn-call">📞 Volat 800 120 080</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="psychiatrie blazinec lekarna leky hospitalizace luzka ambulance">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🧠</div>
+            <div class="category-title">Psychiatrie (Ambulance a lůžka)</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">PN Petrohrad (Lůžka)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Petrohrad 1, okr. Louny</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Lůžková psychiatrická péče pro dospělé.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 24/7</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420415236111" class="btn btn-call">📞 Volat 415 236 111</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">PN Horní Beřkovice (Lůžka)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Podřipská 1, Horní Beřkovice (spád Litoměřice)</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Lůžková psychiatrická péče.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 24/7</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420416808111" class="btn btn-call">📞 Volat 416 808 111</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Psychiatrie Ústí n. L. (Lůžka)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Sociální péče 3316/12A (MNÚL)</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Psychiatrické oddělení KZ, a.s.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 24/7</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420477111111" class="btn btn-call">📞 Ústředna 477 111 111</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Psychiatrie Most (Ambulance/Příjem)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">J. E. Purkyně 205, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Akutní psychiatrie KZ, a.s.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 24/7</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420478032475" class="btn btn-call">📞 Volat 478 032 475</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Psychiatrická ambulance Chomutov</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Kochova 1185, Chomutov (Nemocnice)</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Ambulantní péče KZ, a.s.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Pracovní dny</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420474447111" class="btn btn-call">📞 Ústředna 474 447 111</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">CDZ Ústí n. L. (Fokus Labe)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Klíšská 962/77, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Centrum duševního zdraví, terénní týmy.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá 8:00–16:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475220706" class="btn btn-call">📞 Volat 475 220 706</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">CDZ Děčín (Fokus Labe)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Teplická 39, Děčín</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Centrum duševního zdraví.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá 8:00–16:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420775550269" class="btn btn-call">📞 Volat 775 550 269</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="agrese nasili domaci tyraní vztek spondea spirala">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🛑</div>
+            <div class="category-title">Agrese a násilí</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Intervenční centrum ÚK</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Klíšská 962/77, Ústí n. L. (výjezdy po kraji)</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Pomoc ohroženým domácím násilím, vykázání.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá 8:00–16:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475500858" class="btn btn-call">📞 Volat 475 500 858</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Linka pro zvládání vzteku (SPONDEA)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Pomoc pro osoby, které nezvládají agresi a vztek.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá (viz web)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420739078078" class="btn btn-call">📞 Volat 739 078 078</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Bílý kruh bezpečí</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Krizová pomoc obětem trestných činů a násilí.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Nonstop (116 006)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:116006" class="btn btn-call">📞 Volat 116 006</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="umrti mrtvy sebevrazda pozustali hospic dite ztrata plaminek">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🕊️</div>
+            <div class="category-title">Úmrtí a poradenství pro pozůstalé</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Intervenční tým ZZS ÚK</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">První psychická pomoc u náhlých úmrtí a nehod.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Přes dispečink 155 (Nonstop)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:155" class="btn btn-call">📞 Kontaktovat dispečink 155</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Poradna Hospic Sv. Štěpána</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Rybářské náměstí 662/4, Litoměřice</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Odborné poradenství a podpora pro pozůstalé.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po předchozí domluvě</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420416733185" class="btn btn-call">📞 Volat 416 733 185</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Poradna Hospic v Mostě</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Svážná 1528, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Podpůrné skupiny, poradenství po ztrátě blízkého.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Dle domluvy v pracovní dny</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420476705500" class="btn btn-call">📞 Volat 476 705 500</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Dlouhá cesta (Ztráta dítěte)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Celostátní linka pomoci rodičům, kterým zemřelo dítě.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Linka péče 602 186 727</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420602186727" class="btn btn-call">📞 Volat 602 186 727</a>
+                    <a href="https://www.dlouhacesta.cz" class="btn btn-web" target="_blank">Web</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="zavislosti drogy alkohol herak k-centrum white light">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">💊</div>
+            <div class="category-title">Závislosti (Drogy, alkohol)</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">White Light I. (K-Centrum Teplice)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Duchcovská 411/53, Teplice</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Kontaktní centrum pro uživatele drog.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá (viz web)</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420734316384" class="btn btn-call">📞 Volat 734 316 384</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Most k naději (K-Centrum Most)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">J. Š. Baara 1438, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Pomoc uživatelům drog a osobám v krizi.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Pracovní dny</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420476706076" class="btn btn-call">📞 Volat 476 706 076</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Drug-out Klub Ústí</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Velká Hradební 15, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Terénní program a K-centrum.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475200488" class="btn btn-call">📞 Volat 475 200 488</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="zdvop klokanek mostacek tyraní zanedbavani chomutov zatec">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🏠</div>
+            <div class="category-title">Děti 0 - 18 ZDVOP</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">ZDVOP Mosťáček</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Na Vyhlídce 2327, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Okamžitá pomoc dětem v ohrožení.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem nonstop</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420476104250" class="btn btn-call">📞 Volat 476 104 250</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Klokánek Ústí nad Labem</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">U Panského dvora 15, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Okamžitá pomoc FOD.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem nonstop</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420724667657" class="btn btn-call">📞 Volat 724 667 657</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Klokánek Chomutov</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Hálkova 202, Chomutov</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Okamžitá pomoc FOD.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem nonstop</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420724667652" class="btn btn-call">📞 Volat 724 667 652</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Klokánek Teplice</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">J. V. Sládka 1629, Teplice</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Okamžitá pomoc FOD.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem nonstop</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420724667683" class="btn btn-call">📞 Volat 724 667 683</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="bezdomovci spanek nocleharna zima teplo">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🍵</div>
+            <div class="category-title">Lidé bez přístřeší - základní</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Noclehárna Ústí nad Labem (Charita)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Štefánikova 246/1, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Nocleh, hygiena.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 18:00–21:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475601805" class="btn btn-call">📞 Volat 475 601 805</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Noclehárna Děčín (Městská charita)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Puklova 80, Děčín</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Nocleh, denní centrum pro lidi bez přístřeší.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem večer</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420412531024" class="btn btn-call">📞 Volat 412 531 024</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Azylový dům Most (Základní nocleh)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Hořanská cesta, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Noclehárna pro muže.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Příjem 19:00–21:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420476702581" class="btn btn-call">📞 Volat 476 702 581</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="azylovy dum bydleni charita rehabilitace ubytovna">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🏢</div>
+            <div class="category-title">Lidé bez přístřeší - následná</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Azylový dům Charita Ústí - Samaritán</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Štefánikova 246/1, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Sociální rehabilitace, dlouhodobější pobyt.</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420475501633" class="btn btn-call">📞 Volat 475 501 633</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Azylový dům Chomutov (Muži)</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Spořická, Chomutov</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Ubytování a pomoc v nouzi.</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420474620025" class="btn btn-call">📞 Volat 474 620 025</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="charita pomoc rodinam nouze oblecovani satnik jidlo">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">⛪</div>
+            <div class="category-title">Charita Ústeckého kraje</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Charitní poradna Ústí n. L.</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Štefánikova 246/1, Ústí n. L.</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Pomoc v nouzi, potravinová pomoc, dluhy.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Po-Pá 8:00–16:00</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420731402430" class="btn btn-call">📞 Volat 731 402 430</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Oblastní charita Most</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Adresa:</span><span class="detail-value">Fr. Halase 851, Most</span></div>
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Materiální a sociální pomoc pro rodiny.</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:+420476704403" class="btn btn-call">📞 Volat 476 704 403</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-item" data-search="univerzalni nepanikar intervence hasici policie">
+        <div class="category-header" onclick="toggleAccordion(this)">
+            <div class="category-icon">🌍</div>
+            <div class="category-title">Univerzální a krizové linky</div>
+            <div class="chevron"></div>
+        </div>
+        <div class="category-content">
+            <div class="contact-entry">
+                <span class="org-name">Aplikace Nepanikař</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Mobilní appka - první pomoc u paniky a deprese.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Chat Po-Pá 16-22, Ne 14-20</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="https://nepanikar.eu" class="btn btn-web" target="_blank">Web / App</a>
+                    <a href="mailto:pomoc@nepanikar.eu" class="btn btn-mail">Email</a>
+                </div>
+            </div>
+            <div class="contact-entry">
+                <span class="org-name">Psychosociální pomoc HZS ÚK</span>
+                <div class="org-detail">
+                    <div class="detail-row"><span class="detail-label">Popis:</span><span class="detail-value">Posttraumatická péče Hasičského záchranného sboru.</span></div>
+                    <div class="detail-row"><span class="detail-label">Doba:</span><span class="detail-value">Vyžádání přes KOPIS 112/150</span></div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:150" class="btn btn-call">📞 Linka 150 (KOPIS)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="noResults" class="no-results">Nebyly nalezeny žádné záznamy.</div>
+
+</div>
+
+<script>
+    function toggleAccordion(header) {
+        const currentItem = header.parentElement;
+        const currentContent = currentItem.querySelector('.category-content');
+        const isOpening = currentContent.style.display !== 'block';
+
+        // Zavřít všechny ostatní accordiony
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('active');
+            item.querySelector('.category-content').style.display = 'none';
+        });
+
+        // Otevřít kliknutý, pokud byl předtím zavřený
+        if (isOpening) {
+            currentItem.classList.add('active');
+            currentContent.style.display = 'block';
+            
+            // Plynulé odrolování, aby hlavička zůstala vidět (užitečné u velkého počtu řádků)
+            setTimeout(() => {
+                const headerOffset = 60; // výška fixního horního menu
+                const elementPosition = currentItem.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                     top: offsetPosition,
+                     behavior: "smooth"
+                });
+            }, 50);
+        }
+    }
+
+    function filterApp() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.category-item');
+        const noResults = document.getElementById('noResults');
+        let visibleCount = 0;
+
+        items.forEach(item => {
+            const searchText = item.getAttribute('data-search').toLowerCase();
+            const contentText = item.innerText.toLowerCase();
+
+            if (searchText.includes(input) || contentText.includes(input)) {
+                item.style.display = 'block';
+                visibleCount++;
+                if (input.length > 2) { // Rozbalit jen při zadání více znaků
+                    item.classList.add('active');
+                    item.querySelector('.category-content').style.display = 'block';
+                }
+            } else {
+                item.style.display = 'none';
+                item.classList.remove('active');
+                item.querySelector('.category-content').style.display = 'none';
+            }
+        });
+        
+        // Sbalení výsledků, když uživatel smaže text ve vyhledávání
+        if(input.length === 0) {
+            items.forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.category-content').style.display = 'none';
+            });
+        }
+        
+        noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>
